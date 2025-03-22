@@ -31,7 +31,6 @@ function Drawing.paint()
 		BACKGROUND_COLOUR)
 	local offset = 5
 	Drawing.drawAnalogStick(Drawing.Screen.Width + Drawing.WIDTH_OFFSET / 3 + 13, 90 + offset)
-	Memory.Refresh()
 	Drawing.drawInputButtons(Drawing.Screen.Width + Drawing.WIDTH_OFFSET / 3 + 13, -230 + offset)
 	Drawing.drawMiscData(Drawing.Screen.Width + 13, 245 + offset)
 end
@@ -71,7 +70,6 @@ function Drawing.drawAnalogStick(x, y)
 	})
 end
 
--- pass wgui.rect or wgui.ellipse to the shape param
 local function drawInputButton(pressed, highlightedColour, text, shape, x, y, w, h, textoffset_x, textoffset_y, font)
 	local rect = { x = x, y = y, width = w, height = h }
 	local text_color = TEXT_COLOUR
@@ -100,7 +98,6 @@ local function drawInputButton(pressed, highlightedColour, text, shape, x, y, w,
 		font_size = 16,
 		color = text_color,
 	})
-	-- wgui.text(x + w / 2 - textoffset_x, y + h / 2 - textoffset_y, text)
 end
 
 -- in the future: make these a ratio instead of hardcoded numbers
@@ -181,7 +178,7 @@ function Drawing.drawMiscData(x, y_0, display_input_text)
 	local y = y_0
 
 	local width = Drawing.Screen.Width + Drawing.WIDTH_OFFSET - x - 10
-	for i = 1, table.getn(elements) do
+	for i = 1, #elements do
 		y = y + spacing[i]
 		local result = elements[i](y)
 		BreitbandGraphics.draw_text2({
@@ -191,16 +188,7 @@ function Drawing.drawMiscData(x, y_0, display_input_text)
 			font_size = result.size + 4,
 			color = TEXT_COLOUR,
 			align_x = BreitbandGraphics.alignment.start,
-			fit = true
+			-- fit = true
 		})
 	end
-
-	--[[
-	wgui.setcolor(TEXT_COLOUR)
-	x = x + 18
-	wgui.text(x, 50, "Like")
-	wgui.text(x+30, 80, "Comment")
-	wgui.text(x+80, 110, "Subscribe")
-	wgui.setfont(75,"Impact","")
-	wgui.text(140, 600, "POV: YOU ARE BULLY")]]
 end
