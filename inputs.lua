@@ -12,12 +12,6 @@ lib_path = folder .. "lib\\"
 ---@module 'breitbandgraphics'
 BreitbandGraphics = dofile(lib_path .. "breitbandgraphics.lua")
 
----@module 'mupen-lua-ugui'
-ugui = dofile(lib_path .. "mupen-lua-ugui.lua")
-
----@module 'mupen-lua-ugui-ext'
-ugui_ext = dofile(lib_path .. "mupen-lua-ugui-ext.lua")
-
 PATH = debug.getinfo(1).source:sub(2):match("(.*\\)") .. "\\InputDirection_dev\\"
 
 Joypad = { input = { X = 0, Y = 0 } }
