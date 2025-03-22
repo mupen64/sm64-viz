@@ -172,16 +172,19 @@ function Drawing.drawMiscData(x, y_0, display_input_text)
 	local spacing = { 30, 32, 25, 32, 25, 20, 20, 32, 25, 20, 20, 32 }
 
 	local y = y_0
+
+	local width = Drawing.Screen.Width + Drawing.WIDTH_OFFSET - x - 10
 	for i = 1, table.getn(elements) do
 		y = y + spacing[i]
 		local result = elements[i](y)
 		BreitbandGraphics.draw_text2({
 			text = result.text,
-			rectangle = { x = x, y = y, width = 200, height = 20 },
+			rectangle = { x = x, y = y, width = width, height = 20 },
 			font_name = "Arial",
 			font_size = result.size + 4,
 			color = TEXT_COLOUR,
 			align_x = BreitbandGraphics.alignment.start,
+			fit = true
 		})
 	end
 
