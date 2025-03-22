@@ -26,20 +26,22 @@ dofile(PATH .. "Drawing.lua")
 Drawing.resizeScreen()
 
 dofile(PATH .. "Memory.lua")
-dofile(PATH .. "Settings.lua")
 dofile(PATH .. "Angles.lua")
 dofile(PATH .. "Engine.lua")
-dofile(PATH .. "Program.lua")
 dofile(PATH .. "MoreMaths.lua")
 dofile(PATH .. "Actions.lua")
 
-Program.initFrame()
+local function update_memory()
+	Memory.UpdatePrevPos()
+	Memory.Refresh()
+end
+
+update_memory()
 Memory.UpdatePrevPos()
 
 function atvi()
 	Joypad.input = joypad.get(1)
-	Program.initFrame()
-	Program.main()
+	update_memory()
 end
 
 function atdrawd2d()
