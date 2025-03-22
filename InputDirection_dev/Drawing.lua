@@ -147,7 +147,14 @@ function Drawing.drawMiscData(x, y_0, display_input_text)
 			return { text = "XZ Movement: " .. MoreMaths.Round(Engine.GetDistMoved(), 2), size = SMALL_FONT_SIZE }
 		end,
 		function(y)
-			return { text = string.format("Spd Efficiency: %.2f%%", Engine.GetSpeedEfficiency()), size = SMALL_FONT_SIZE }
+			local spd_eff = Engine.GetSpeedEfficiency()
+			local text
+			if spd_eff > 100000 then
+				text = "Spd Efficiency: ∞%"
+			else
+				text = string.format("Spd Efficiency: %.2f%%", Engine.GetSpeedEfficiency())
+			end
+			return { text = text, size = SMALL_FONT_SIZE }
 		end,
 		function(y)
 			return { text = "Y Spd: " .. speed, size = LARGE_FONT_SIZE }
