@@ -128,8 +128,9 @@ function Drawing.drawMiscData(x, y_0)
 
 	local elements = {
 		function(y)
-			return
-			{ text = "Frame: " .. emu.samplecount(), size = SMALL_FONT_SIZE }
+			local sample = emu.samplecount()
+			local active = sample ~= 4294967295 
+			return { text = active and "Frame: " .. emu.samplecount() or "No movie playing", size = SMALL_FONT_SIZE }
 		end,
 		function(y)
 			return { text = "Yaw (Facing): " .. Memory.Mario.FacingYaw, size = LARGE_FONT_SIZE }
