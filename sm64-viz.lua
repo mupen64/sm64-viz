@@ -1,10 +1,8 @@
--- Input Direction Lua "Encoding Version"
--- Authors: MKDasher, Xander, ShadoXFM
--- Hacker: Eddio0141
--- Special thanks to Pannenkoek2012 and Peter Fedak for angle calculation support.
--- Also thanks to MKDasher to making the code very clean
--- Other contributors:
---	Madghostek
+--
+-- Copyright (c) 2025, sm64-viz maintainers, contributors, and original authors (MKDasher, Xander, ShadoXFM)
+--
+-- SPDX-License-Identifier: GPL-2.0-or-later
+--
 
 folder = debug.getinfo(1).source:sub(2):match("(.*\\)")
 lib_path = folder .. "lib\\"
@@ -12,7 +10,7 @@ lib_path = folder .. "lib\\"
 ---@module 'breitbandgraphics'
 BreitbandGraphics = dofile(lib_path .. "breitbandgraphics.lua")
 
-PATH = debug.getinfo(1).source:sub(2):match("(.*\\)") .. "\\InputDirection_dev\\"
+PATH = debug.getinfo(1).source:sub(2):match("(.*\\)") .. "\\viz\\"
 
 Joypad = { input = { X = 0, Y = 0 } }
 

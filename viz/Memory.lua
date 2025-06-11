@@ -1,12 +1,18 @@
+--
+-- Copyright (c) 2025, sm64-viz maintainers, contributors, and original authors (MKDasher, Xander, ShadoXFM)
+--
+-- SPDX-License-Identifier: GPL-2.0-or-later
+--
+
 Memory = {
 	Mario = {
-	
+
 	},
 	Camera = {
-	
+
 	},
 	Version = 1,
-	
+
 	PreviousPos = {
 		X = 0,
 		Z = 0
@@ -57,16 +63,16 @@ end
 
 function Memory.CheckVersion()
 	-- Checks Addr 0x80322B24:
-		-- If U: 8F A6 00 1C 	LW a2 <- [sp+0x001C]		(OS func)
-		-- If J: 46 00 60 04	SQRT.s f00.s = sqrt(f12.s) 	(sqrtf func)
-	
+	-- If U: 8F A6 00 1C 	LW a2 <- [sp+0x001C]		(OS func)
+	-- If J: 46 00 60 04	SQRT.s f00.s = sqrt(f12.s) 	(sqrtf func)
+
 	if memory.readdword(0x00B22B24) == 1174429700 then -- J version
 		Memory.Version = GameVersion.J
-	else -- U version
+	else                                            -- U version
 		Memory.Version = GameVersion.U
 	end
 end
- 
+
 function Memory.UpdatePrevPos()
 	Memory.PreviousPos.X = Memory.Mario.X
 	Memory.PreviousPos.Z = Memory.Mario.Z

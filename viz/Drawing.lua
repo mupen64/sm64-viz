@@ -1,3 +1,9 @@
+--
+-- Copyright (c) 2025, sm64-viz maintainers, contributors, and original authors (MKDasher, Xander, ShadoXFM)
+--
+-- SPDX-License-Identifier: GPL-2.0-or-later
+--
+
 local BACKGROUND_COLOUR = "#222222"
 local TEXT_COLOUR = "#FFFFFF"
 
@@ -56,7 +62,7 @@ function Drawing.drawAnalogStick(x, y)
 	BreitbandGraphics.draw_line({ x = x + r, y = y }, { x = x + r, y = y + r * 2 }, TEXT_COLOUR, 1)
 	BreitbandGraphics.draw_line({ x = x + r, y = y + r }, { x = joy_x, y = joy_y }, "#00FF08", 3)
 	BreitbandGraphics.fill_ellipse(
-	{ x = joy_x - tip_size / 2, y = joy_y - tip_size / 2, width = tip_size, height = tip_size }, "#FF0000")
+		{ x = joy_x - tip_size / 2, y = joy_y - tip_size / 2, width = tip_size, height = tip_size }, "#FF0000")
 
 	BreitbandGraphics.draw_text2({
 		text = "x: " .. Joypad.input.X,
@@ -129,7 +135,7 @@ function Drawing.drawMiscData(x, y_0)
 	local elements = {
 		function(y)
 			local sample = emu.samplecount()
-			local active = sample ~= 4294967295 
+			local active = sample ~= 4294967295
 			return { text = active and "Frame: " .. emu.samplecount() or "No movie playing", size = SMALL_FONT_SIZE }
 		end,
 		function(y)
