@@ -14,6 +14,8 @@ PATH = debug.getinfo(1).source:sub(2):match("(.*\\)") .. "\\viz\\"
 
 Joypad = { input = { X = 0, Y = 0 } }
 
+local invalidated = true
+
 dofile(PATH .. "Drawing.lua")
 dofile(PATH .. "Memory.lua")
 dofile(PATH .. "Angles.lua")
@@ -32,9 +34,16 @@ end)
 emu.atvi(function()
 	Joypad.input = joypad.get(1)
 	update_memory()
+	invalidated = true
 end)
 
 emu.atdrawd2d(function()
+	if not invalidated then
+		return
+	end
+
+	invalidated = false
+
 	Drawing.paint()
 end)
 
