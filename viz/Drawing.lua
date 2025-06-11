@@ -8,26 +8,40 @@ local BACKGROUND_COLOUR = "#222222"
 local TEXT_COLOUR = "#FFFFFF"
 
 Drawing = {
-	WIDTH_OFFSET = 233,
-	TOP_MARGIN = 20,
-	BOTTOM_MARGIN = 20,
+	TOP_BOTTOM_MARGIN = 20,
 	PAD = 10,
-	Screen = {
-		Height = 0,
-		Width = 0
-	}
+	effective_width_offset = 0,
+	initial_size = { width = 0, height = 0 },
+	size = { width = 0, height = 0 },
 }
 
-function Drawing.resizeScreen()
-	screen = wgui.info()
-	Drawing.Screen.Height = screen.height
-	width10 = screen.width % 10
-	if width10 == 0 or width10 == 4 or width10 == 8 then
-		Drawing.Screen.Width = screen.width
-		wgui.resize(screen.width + Drawing.WIDTH_OFFSET, screen.height)
-	else
-		Drawing.Screen.Width = screen.width - Drawing.WIDTH_OFFSET
+local function adjust_width_for_aspect_ratio(target_width, height)
+	local target_aspect = 16 / 9
+	local ideal_width = math.floor(height * target_aspect + 0.5)
+
+	local best_width = ideal_width
+	while best_width < target_width do
+		best_width = best_width + 1
+		local ratio = best_width / height
+		if math.abs(ratio - target_aspect) < 0.01 then
+			break
+		end
 	end
+	return best_width
+end
+
+function Drawing.resizeScreen()
+	Drawing.initial_size = wgui.info()
+
+	local best_width = adjust_width_for_aspect_ratio(Drawing.initial_size.width, Drawing.initial_size.height - Drawing.TOP_BOTTOM_MARGIN * 2)
+	Drawing.effective_width_offset = best_width - Drawing.initial_size.width
+	Drawing.size = { width = best_width, height = Drawing.initial_size.height }
+
+	wgui.resize(Drawing.size.width, Drawing.size.height)
+end
+
+function Drawing.unresize()
+	wgui.resize(Drawing.size.width - Drawing.effective_width_offset, Drawing.size.height)
 end
 
 local LARGE_FONT_SIZE = 16
@@ -36,13 +50,13 @@ local SMALL_FONT_SIZE = 12
 
 function Drawing.paint()
 	BreitbandGraphics.fill_rectangle(
-		{ x = Drawing.Screen.Width, y = 0, width = Drawing.WIDTH_OFFSET, height = Drawing.Screen.Height },
+		{ x = Drawing.initial_size.width, y = 0, width = Drawing.effective_width_offset, height = Drawing.size.height },
 		BACKGROUND_COLOUR)
 
-	local base_x = Drawing.Screen.Width + 10
-	Drawing.drawAnalogStick(base_x, Drawing.TOP_MARGIN)
-	Drawing.drawInputButtons(base_x, Drawing.TOP_MARGIN + 160 + Drawing.PAD)
-	Drawing.drawMiscData(base_x, Drawing.TOP_MARGIN + 255 + Drawing.PAD)
+	local base_x = Drawing.initial_size.width + 10
+	Drawing.drawAnalogStick(base_x, Drawing.TOP_BOTTOM_MARGIN)
+	Drawing.drawInputButtons(base_x, Drawing.TOP_BOTTOM_MARGIN + 160 + Drawing.PAD)
+	Drawing.drawMiscData(base_x, Drawing.TOP_BOTTOM_MARGIN + 255 + Drawing.PAD)
 end
 
 function Drawing.drawAnalogStick(x, y)
@@ -203,7 +217,7 @@ function Drawing.drawMiscData(x, y_0)
 
 	local y = y_0
 
-	local width = Drawing.Screen.Width + Drawing.WIDTH_OFFSET - x - 10
+	local width = Drawing.initial_size.width + Drawing.effective_width_offset - x - 10
 	for i = 1, #elements do
 		y = y + spacing[i]
 		local result = elements[i](y)

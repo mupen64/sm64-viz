@@ -47,6 +47,10 @@ emu.atdrawd2d(function()
 	Drawing.paint()
 end)
 
+emu.atstop(function ()
+	Drawing.unresize()
+end)
+
 update_memory()
 Memory.UpdatePrevPos()
 Drawing.resizeScreen()
