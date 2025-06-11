@@ -3,6 +3,9 @@ local TEXT_COLOUR = "#FFFFFF"
 
 Drawing = {
 	WIDTH_OFFSET = 233,
+	TOP_MARGIN = 20,
+	BOTTOM_MARGIN = 20,
+	PAD = 10,
 	Screen = {
 		Height = 0,
 		Width = 0
@@ -29,32 +32,35 @@ function Drawing.paint()
 	BreitbandGraphics.fill_rectangle(
 		{ x = Drawing.Screen.Width, y = 0, width = Drawing.WIDTH_OFFSET, height = Drawing.Screen.Height },
 		BACKGROUND_COLOUR)
-	local offset = 5
-	Drawing.drawAnalogStick(Drawing.Screen.Width + Drawing.WIDTH_OFFSET / 3 + 13, 90 + offset)
-	Drawing.drawInputButtons(Drawing.Screen.Width + Drawing.WIDTH_OFFSET / 3 + 13, -230 + offset)
-	Drawing.drawMiscData(Drawing.Screen.Width + 13, 245 + offset)
-end
 
+	local base_x = Drawing.Screen.Width + 10
+	Drawing.drawAnalogStick(base_x, Drawing.TOP_MARGIN)
+	Drawing.drawInputButtons(base_x, Drawing.TOP_MARGIN + 160 + Drawing.PAD)
+	Drawing.drawMiscData(base_x, Drawing.TOP_MARGIN + 255 + Drawing.PAD)
+end
 
 function Drawing.drawAnalogStick(x, y)
 	local r = 80 -- radius
 	local m = 128 -- max input
 
-	local rect = { x = x - 80, y = y - 80, width = 160, height = 160 }
+	local rect = { x = x, y = y, width = 160, height = 160 }
+
+	local joy_x = x + r + Joypad.input.X * r / m
+	local joy_y = y + r - Joypad.input.Y * r / m
+	local tip_size = 10
 
 	BreitbandGraphics.draw_rectangle(rect, TEXT_COLOUR, 1)
 	BreitbandGraphics.fill_ellipse(rect, "#343434")
 	BreitbandGraphics.draw_ellipse(rect, TEXT_COLOUR, 1)
-	BreitbandGraphics.draw_line({ x = x - r, y = y }, { x = x + r, y = y }, TEXT_COLOUR, 1)
-	BreitbandGraphics.draw_line({ x = x, y = y - r }, { x = x, y = y + r }, TEXT_COLOUR, 1)
-	BreitbandGraphics.draw_line({ x = x, y = y }, { x = x + Joypad.input.X * r / m, y = y - Joypad.input.Y * r / m },
-		"#00FF08", 3)
+	BreitbandGraphics.draw_line({ x = x, y = y + r }, { x = x + r * 2, y = y + r }, TEXT_COLOUR, 1)
+	BreitbandGraphics.draw_line({ x = x + r, y = y }, { x = x + r, y = y + r * 2 }, TEXT_COLOUR, 1)
+	BreitbandGraphics.draw_line({ x = x + r, y = y + r }, { x = joy_x, y = joy_y }, "#00FF08", 3)
 	BreitbandGraphics.fill_ellipse(
-		{ x = x + Joypad.input.X * r / m - 4, y = y - Joypad.input.Y * r / m - 4, width = 8, height = 8 }, "#FF0000")
+	{ x = joy_x - tip_size / 2, y = joy_y - tip_size / 2, width = tip_size, height = tip_size }, "#FF0000")
 
 	BreitbandGraphics.draw_text2({
 		text = "x: " .. Joypad.input.X,
-		rectangle = { x = x + r + 6, y = y - 25, width = 100, height = 20 },
+		rectangle = { x = x + r * 2 + 6, y = y + r - 25, width = 100, height = 20 },
 		font_name = "Arial",
 		font_size = 16,
 		color = TEXT_COLOUR,
@@ -62,7 +68,7 @@ function Drawing.drawAnalogStick(x, y)
 	})
 	BreitbandGraphics.draw_text2({
 		text = "y: " .. -Joypad.input.Y,
-		rectangle = { x = x + r + 6, y = y, width = 100, height = 20 },
+		rectangle = { x = x + r * 2 + 6, y = y + r, width = 100, height = 20 },
 		font_name = "Arial",
 		font_size = 16,
 		color = TEXT_COLOUR,
@@ -100,23 +106,21 @@ local function drawInputButton(pressed, highlightedColour, text, shape, x, y, w,
 	})
 end
 
--- in the future: make these a ratio instead of hardcoded numbers
--- adapted from ShadoXFM's code
 function Drawing.drawInputButtons(x, y)
-	drawInputButton(Joypad.input.A, "#3366CC", "A", "ellipse", x + 4, y + 470, 29, 29, nil, nil, "Arial")
-	drawInputButton(Joypad.input.B, "#009245", "B", "ellipse", x - 15, y + 441, 29, 29, nil, nil, "Arial")
-	drawInputButton(Joypad.input.start, "#EE1C24", "S", "ellipse", x - 47, y + 470, 29, 29, nil, nil, "Arial")
-	drawInputButton(Joypad.input.R, "#DDDDDD", "R", "rect", x + 20, y + 410, 72, 21, nil, nil, "Arial")
-	drawInputButton(Joypad.input.L, "#DDDDDD", "L", "rect", x - 69, y + 410, 72, 21, nil, nil, "Arial")
-	drawInputButton(Joypad.input.Z, "#DDDDDD", "Z", "rect", x - 78, y + 440, 21, 59, nil, nil, "Arial")
+	drawInputButton(Joypad.input.A, "#3366CC", "A", "ellipse", x + 82, y + 60, 29, 29, nil, nil, "Arial")
+	drawInputButton(Joypad.input.B, "#009245", "B", "ellipse", x + 63, y + 31, 29, 29, nil, nil, "Arial")
+	drawInputButton(Joypad.input.start, "#EE1C24", "S", "ellipse", x + 31, y + 60, 29, 29, nil, nil, "Arial")
+	drawInputButton(Joypad.input.R, "#DDDDDD", "R", "rect", x + 98, y + 0, 72, 21, nil, nil, "Arial")
+	drawInputButton(Joypad.input.L, "#DDDDDD", "L", "rect", x + 9, y + 0, 72, 21, nil, nil, "Arial")
+	drawInputButton(Joypad.input.Z, "#DDDDDD", "Z", "rect", x + 0, y + 30, 21, 59, nil, nil, "Arial")
 
-	drawInputButton(Joypad.input.Cleft, "#FFFF00", "3", "ellipse", x + 38, y + 457, 21, 21, 8, 7, "Marlett")
-	drawInputButton(Joypad.input.Cright, "#FFFF00", "4", "ellipse", x + 77, y + 457, 21, 21, 9, 7, "Marlett")
-	drawInputButton(Joypad.input.Cup, "#FFFF00", "5", "ellipse", x + 57, y + 438, 21, 21, 8, 8, "Marlett")
-	drawInputButton(Joypad.input.Cdown, "#FFFF00", "6", "ellipse", x + 57, y + 478, 21, 21, 8, 8, "Marlett")
+	drawInputButton(Joypad.input.Cleft, "#FFFF00", "3", "ellipse", x + 116, y + 47, 21, 21, 8, 7, "Marlett")
+	drawInputButton(Joypad.input.Cright, "#FFFF00", "4", "ellipse", x + 155, y + 47, 21, 21, 9, 7, "Marlett")
+	drawInputButton(Joypad.input.Cup, "#FFFF00", "5", "ellipse", x + 135, y + 28, 21, 21, 8, 8, "Marlett")
+	drawInputButton(Joypad.input.Cdown, "#FFFF00", "6", "ellipse", x + 135, y + 68, 21, 21, 8, 8, "Marlett")
 end
 
-function Drawing.drawMiscData(x, y_0, display_input_text)
+function Drawing.drawMiscData(x, y_0)
 	speed = 0
 	if Memory.Mario.VSpeed > 0 then
 		speed = MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.VSpeed), 6)
@@ -134,8 +138,11 @@ function Drawing.drawMiscData(x, y_0, display_input_text)
 			return { text = "Yaw (Intended): " .. Memory.Mario.IntendedYaw, size = SMALL_FONT_SIZE }
 		end,
 		function(y)
-			return { text = "H Spd: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.HSpeed), 3), size =
-			LARGE_FONT_SIZE }
+			return {
+				text = "H Spd: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.HSpeed), 3),
+				size =
+					LARGE_FONT_SIZE
+			}
 		end,
 		function(y)
 			return { text = "H Sliding Spd: " .. MoreMaths.Round(Engine.GetHSlidingSpeed(), 2), size = SMALL_FONT_SIZE }
@@ -157,23 +164,35 @@ function Drawing.drawMiscData(x, y_0, display_input_text)
 			return { text = "Y Spd: " .. speed, size = LARGE_FONT_SIZE }
 		end,
 		function(y)
-			return { text = "Mario X: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.X), 2), size =
-			SMALL_FONT_SIZE }
+			return {
+				text = "Mario X: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.X), 2),
+				size =
+					SMALL_FONT_SIZE
+			}
 		end,
 		function(y)
-			return { text = "Mario Y: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.Y), 2), size =
-			SMALL_FONT_SIZE }
+			return {
+				text = "Mario Y: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.Y), 2),
+				size =
+					SMALL_FONT_SIZE
+			}
 		end,
 		function(y)
-			return { text = "Mario Z: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.Z), 2), size =
-			SMALL_FONT_SIZE }
+			return {
+				text = "Mario Z: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.Z), 2),
+				size =
+					SMALL_FONT_SIZE
+			}
 		end,
 		function(y)
 			return { text = "Action: " .. Engine.GetCurrentAction(), size = MEDIUM_FONT_SIZE }
 		end
 	}
 
-	local spacing = { 30, 32, 25, 32, 25, 20, 20, 32, 25, 20, 20, 32 }
+	local BIG = 30
+	local SMALL = 20
+
+	local spacing = { 0, BIG, SMALL, BIG, SMALL, SMALL, SMALL, BIG, SMALL, SMALL, SMALL, BIG }
 
 	local y = y_0
 
