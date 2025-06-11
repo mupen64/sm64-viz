@@ -15,8 +15,6 @@ PATH = debug.getinfo(1).source:sub(2):match("(.*\\)") .. "\\viz\\"
 Joypad = { input = { X = 0, Y = 0 } }
 
 dofile(PATH .. "Drawing.lua")
-Drawing.resizeScreen()
-
 dofile(PATH .. "Memory.lua")
 dofile(PATH .. "Angles.lua")
 dofile(PATH .. "Engine.lua")
@@ -28,17 +26,16 @@ local function update_memory()
 	Memory.Refresh()
 end
 
-update_memory()
-Memory.UpdatePrevPos()
-
-function atvi()
+emu.atvi(function()
 	Joypad.input = joypad.get(1)
 	update_memory()
-end
+end)
 
-function atdrawd2d()
+emu.atdrawd2d(function()
 	Drawing.paint()
-end
+end)
 
-emu.atinput(atvi)
-emu.atdrawd2d(atdrawd2d)
+update_memory()
+Memory.UpdatePrevPos()
+Drawing.resizeScreen()
+
