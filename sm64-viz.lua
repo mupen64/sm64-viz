@@ -22,9 +22,12 @@ dofile(PATH .. "MoreMaths.lua")
 dofile(PATH .. "Actions.lua")
 
 local function update_memory()
-	Memory.UpdatePrevPos()
 	Memory.Refresh()
 end
+
+emu.atinput(function()
+	Memory.UpdatePrevPos()
+end)
 
 emu.atvi(function()
 	Joypad.input = joypad.get(1)
@@ -38,4 +41,3 @@ end)
 update_memory()
 Memory.UpdatePrevPos()
 Drawing.resizeScreen()
-
