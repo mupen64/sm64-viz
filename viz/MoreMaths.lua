@@ -62,3 +62,7 @@ function MoreMaths.Round(num, numDecimalPlaces)
     local mult = 10 ^ (numDecimalPlaces or 0)
     return math.floor(num * mult + 0.5) / mult
 end
+
+function MoreMaths.round_pad_str(val, places)
+    return string.format("%." .. places .. "f", val)
+end

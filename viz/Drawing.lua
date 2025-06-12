@@ -13,7 +13,7 @@ Drawing = {
 	SMALL_FONT_SIZE = 0,
 	TEXT_COLOR = nil,
 	BACKGROUND_COLOUR = "#222222",
-	FONT = "Arial",
+	FONT = "Cascadia Code",
 	effective_width_offset = 0,
 	initial_size = { width = 0, height = 0 },
 	size = { width = 0, height = 0 },
@@ -35,9 +35,9 @@ local function adjust_width_for_aspect_ratio(target_width, height)
 end
 
 local function update_scaled_variables()
-	Drawing.SMALL_FONT_SIZE = 12 * Drawing.scale
-	Drawing.MEDIUM_FONT_SIZE = 14 * Drawing.scale
-	Drawing.LARGE_FONT_SIZE = 16 * Drawing.scale
+	Drawing.SMALL_FONT_SIZE = 14 * Drawing.scale
+	Drawing.MEDIUM_FONT_SIZE = 16 * Drawing.scale
+	Drawing.LARGE_FONT_SIZE = 20 * Drawing.scale
 	Drawing.JOY_RADIUS = 80 * Drawing.scale
 end
 
@@ -201,9 +201,9 @@ function Drawing.draw_buttons(x, y)
 end
 
 function Drawing.drawMiscData(x, y_0)
-	speed = 0
+	local vspd = 0
 	if Memory.Mario.VSpeed > 0 then
-		speed = MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.VSpeed), 6)
+		vspd = MoreMaths.DecodeDecToFloat(Memory.Mario.VSpeed)
 	end
 
 	local elements = {
@@ -211,69 +211,89 @@ function Drawing.drawMiscData(x, y_0)
 			local sample = emu.samplecount()
 			local active = sample ~= 4294967295
 			return {
-				text = active and "Frame: " .. emu.samplecount() or "No movie playing",
-				size = Drawing
-					.SMALL_FONT_SIZE
+				header = active and "Frame" or "No movie playing",
+				text = active and emu.samplecount() or "",
+				size = Drawing.SMALL_FONT_SIZE
 			}
 		end,
 		function(y)
-			return { text = "Yaw (Facing): " .. Memory.Mario.FacingYaw, size = Drawing.LARGE_FONT_SIZE }
-		end,
-		function(y)
-			return { text = "Yaw (Intended): " .. Memory.Mario.IntendedYaw, size = Drawing.SMALL_FONT_SIZE }
-		end,
-		function(y)
 			return {
-				text = "H Spd: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.HSpeed), 3),
+				header = "Yaw (Facing)",
+				text = Memory.Mario.FacingYaw,
 				size = Drawing.LARGE_FONT_SIZE
 			}
 		end,
 		function(y)
 			return {
-				text = "H Sliding Spd: " .. MoreMaths.Round(Engine.GetHSlidingSpeed(), 2),
-				size = Drawing
-					.SMALL_FONT_SIZE
+				header = "Yaw (Intended)",
+				text = Memory.Mario.IntendedYaw,
+				size = Drawing.SMALL_FONT_SIZE
 			}
 		end,
 		function(y)
-			return { text = "XZ Movement: " .. MoreMaths.Round(Engine.GetDistMoved(), 2), size = Drawing.SMALL_FONT_SIZE }
+			return {
+				header = "H Spd",
+				text = MoreMaths.round_pad_str(MoreMaths.DecodeDecToFloat(Memory.Mario.HSpeed), 3),
+				size = Drawing.LARGE_FONT_SIZE
+			}
+		end,
+		function(y)
+			return {
+				header = "H Sliding Spd",
+				text = MoreMaths.round_pad_str(Engine.GetHSlidingSpeed(), 2),
+				size = Drawing.SMALL_FONT_SIZE
+			}
+		end,
+		function(y)
+			return {
+				header = "XZ Movement",
+				text = MoreMaths.round_pad_str(Engine.GetDistMoved(), 2),
+				size = Drawing.SMALL_FONT_SIZE
+			}
 		end,
 		function(y)
 			local spd_eff = Engine.GetSpeedEfficiency()
-			local text
-			if spd_eff > 100000 then
-				text = "Spd Efficiency: ∞%"
-			else
-				text = string.format("Spd Efficiency: %.2f%%", Engine.GetSpeedEfficiency())
-			end
-			return { text = text, size = Drawing.SMALL_FONT_SIZE }
-		end,
-		function(y)
-			return { text = "Y Spd: " .. speed, size = Drawing.LARGE_FONT_SIZE }
-		end,
-		function(y)
+			local text = spd_eff < 100000 and MoreMaths.round_pad_str(Engine.GetSpeedEfficiency(), 2) or "∞"
 			return {
-				text = "Mario X: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.X), 2),
-				size =
-					Drawing.SMALL_FONT_SIZE
+				header = "Spd Efficiency (%)",
+				text = text,
+				size = Drawing.SMALL_FONT_SIZE
 			}
 		end,
 		function(y)
 			return {
-				text = "Mario Y: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.Y), 2),
-				size =
-					Drawing.SMALL_FONT_SIZE
+				header = "Y Spd",
+				text = MoreMaths.round_pad_str(vspd, 3),
+				size = Drawing.LARGE_FONT_SIZE
 			}
 		end,
 		function(y)
 			return {
-				text = "Mario Z: " .. MoreMaths.Round(MoreMaths.DecodeDecToFloat(Memory.Mario.Z), 2),
-				size =
-					Drawing.SMALL_FONT_SIZE
+				header = "Mario X",
+				text = MoreMaths.round_pad_str(MoreMaths.DecodeDecToFloat(Memory.Mario.X), 2),
+				size = Drawing.SMALL_FONT_SIZE
 			}
 		end,
 		function(y)
-			return { text = "Action: " .. Engine.GetCurrentAction(), size = Drawing.MEDIUM_FONT_SIZE }
+			return {
+				header = "Mario Y",
+				text = MoreMaths.round_pad_str(MoreMaths.DecodeDecToFloat(Memory.Mario.Y), 2),
+				size = Drawing.SMALL_FONT_SIZE
+			}
+		end,
+		function(y)
+			return {
+				header = "Mario Z",
+				text = MoreMaths.round_pad_str(MoreMaths.DecodeDecToFloat(Memory.Mario.Z), 2),
+				size = Drawing.SMALL_FONT_SIZE
+			}
+		end,
+		function(y)
+			return {
+				header = "Action",
+				text = Engine.GetCurrentAction(),
+				size = Drawing.MEDIUM_FONT_SIZE
+			}
 		end
 	}
 
@@ -291,15 +311,57 @@ function Drawing.drawMiscData(x, y_0)
 	local width = Drawing.initial_size.width + Drawing.effective_width_offset - x - 10
 	for i = 1, #elements do
 		y = y + spacing[i]
+		if i > 1 and spacing[i - 1] == BIG * Drawing.scale then
+			y = y + 6 * Drawing.scale
+		end
 		local result = elements[i](y)
+		local text = tostring(result.text)
+		local header_size = BreitbandGraphics.get_text_size(result.header, result.size, Drawing.FONT)
+
+		local header_color = BreitbandGraphics.color_to_float(Drawing.TEXT_COLOR)
+		header_color.a = 0.85
+
 		BreitbandGraphics.draw_text2({
-			text = result.text,
-			rectangle = { x = x, y = y, width = width, height = 20 * Drawing.scale },
+			text = result.header,
+			rectangle = { x = x, y = y, width = header_size.width + 1, height = header_size.height },
 			font_name = Drawing.FONT,
-			font_size = result.size + 4,
-			color = Drawing.TEXT_COLOR,
+			font_size = result.size,
+			color = header_color,
 			align_x = BreitbandGraphics.alignment.start,
-			-- fit = true
 		})
+
+		local text_size = BreitbandGraphics.get_text_size(text, result.size, Drawing.FONT)
+		local text_rect_x = Drawing.initial_size.width + Drawing.PAD + 4 * Drawing.scale + header_size.width
+		local text_rect = {
+			x = text_rect_x,
+			y = y,
+			width = Drawing.size.width - text_rect_x - Drawing.PAD,
+			height =
+				text_size.height
+		}
+
+		BreitbandGraphics.draw_text2({
+			text = text,
+			rectangle = { x = text_rect.x, y = text_rect.y - 1, width = text_rect.width + 1, height = text_rect.height },
+			font_name = Drawing.FONT,
+			font_size = result.size,
+			color = Drawing.TEXT_COLOR,
+			align_x = BreitbandGraphics.alignment['end'],
+			fit = true
+		})
+
+		if spacing[i] == BIG * Drawing.scale then
+			local separator_y = y - (BIG - SMALL) * 0.5 * Drawing.scale
+			local separator_color = BreitbandGraphics.color_to_float(Drawing.TEXT_COLOR)
+			separator_color.a = 0.1
+
+			BreitbandGraphics.draw_line({
+				x = x + Drawing.PAD * 4,
+				y = separator_y,
+			}, {
+				x = x + Drawing.effective_width_offset - Drawing.PAD * 2,
+				y = separator_y,
+			}, separator_color, 1)
+		end
 	end
 end
