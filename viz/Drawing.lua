@@ -5,7 +5,6 @@
 --
 
 local BACKGROUND_COLOUR = "#222222"
-local TEXT_COLOUR = "#FFFFFF"
 
 Drawing = {
 	TOP_BOTTOM_MARGIN = 20,
@@ -14,6 +13,7 @@ Drawing = {
 	LARGE_FONT_SIZE = 0,
 	MEDIUM_FONT_SIZE = 0,
 	SMALL_FONT_SIZE = 0,
+	TEXT_COLOR = nil,
 	effective_width_offset = 0,
 	initial_size = { width = 0, height = 0 },
 	size = { width = 0, height = 0 },
@@ -41,6 +41,13 @@ local function update_scaled_variables()
 	Drawing.JOY_RADIUS = 80 * Drawing.scale
 end
 
+local function get_text_color_for_background(color)
+	if color.r * 0.299 + color.g * 0.587 + color.b * 0.114 > 148 then
+		return BreitbandGraphics.colors.black
+	end
+	return BreitbandGraphics.colors.white
+end
+
 function Drawing.size_up()
 	Drawing.initial_size = wgui.info()
 
@@ -53,6 +60,9 @@ function Drawing.size_up()
 	Drawing.scale = MoreMaths.Round(Drawing.scale, 2)
 
 	update_scaled_variables()
+
+	Drawing.TEXT_COLOR = get_text_color_for_background(BreitbandGraphics.float_to_color(BreitbandGraphics
+		.color_to_float(BACKGROUND_COLOUR)))
 
 	wgui.resize(Drawing.size.width, Drawing.size.height)
 end
@@ -94,13 +104,13 @@ function Drawing.draw_joystick(x, y)
 	local line_width = 3 * Drawing.scale
 	local tip_size = 10 * Drawing.scale
 
-	BreitbandGraphics.draw_rectangle(rect, TEXT_COLOUR, 1)
+	BreitbandGraphics.draw_rectangle(rect, Drawing.TEXT_COLOR, 1)
 	BreitbandGraphics.fill_ellipse(rect, "#343434")
-	BreitbandGraphics.draw_ellipse(rect, TEXT_COLOUR, 1)
+	BreitbandGraphics.draw_ellipse(rect, Drawing.TEXT_COLOR, 1)
 	BreitbandGraphics.draw_line({ x = x, y = y + Drawing.JOY_RADIUS },
-		{ x = x + Drawing.JOY_RADIUS * 2, y = y + Drawing.JOY_RADIUS }, TEXT_COLOUR, 1)
+		{ x = x + Drawing.JOY_RADIUS * 2, y = y + Drawing.JOY_RADIUS }, Drawing.TEXT_COLOR, 1)
 	BreitbandGraphics.draw_line({ x = x + Drawing.JOY_RADIUS, y = y },
-		{ x = x + Drawing.JOY_RADIUS, y = y + Drawing.JOY_RADIUS * 2 }, TEXT_COLOUR, 1)
+		{ x = x + Drawing.JOY_RADIUS, y = y + Drawing.JOY_RADIUS * 2 }, Drawing.TEXT_COLOR, 1)
 	BreitbandGraphics.draw_line({ x = x + Drawing.JOY_RADIUS, y = y + Drawing.JOY_RADIUS }, { x = joy_x, y = joy_y },
 		"#00FF08", line_width)
 	BreitbandGraphics.fill_ellipse(
@@ -111,7 +121,7 @@ function Drawing.draw_joystick(x, y)
 		rectangle = { x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD, y = y + Drawing.JOY_RADIUS - 25 * Drawing.scale, width = 100 * Drawing.scale, height = 20 * Drawing.scale },
 		font_name = "Arial",
 		font_size = Drawing.MEDIUM_FONT_SIZE,
-		color = TEXT_COLOUR,
+		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
 	})
 	BreitbandGraphics.draw_text2({
@@ -119,14 +129,14 @@ function Drawing.draw_joystick(x, y)
 		rectangle = { x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD, y = y + Drawing.JOY_RADIUS, width = 100 * Drawing.scale, height = 20 * Drawing.scale },
 		font_name = "Arial",
 		font_size = Drawing.MEDIUM_FONT_SIZE,
-		color = TEXT_COLOUR,
+		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
 	})
 
 	return rect
 end
 
-local function draw_button(pressed, highlightedColour, text, shape, origin_x, origin_y, x, y, w, h, textoffset_x,
+local function draw_button(pressed, active_color, text, shape, origin_x, origin_y, x, y, w, h, textoffset_x,
 						   textoffset_y, font)
 	local rect = {
 		x = origin_x + x * Drawing.scale,
@@ -134,19 +144,21 @@ local function draw_button(pressed, highlightedColour, text, shape, origin_x, or
 		width = w * Drawing.scale,
 		height = h * Drawing.scale
 	}
-	local text_color = TEXT_COLOUR
+
+	local bg_color = BACKGROUND_COLOUR
 
 	if shape == "ellipse" then
 		if pressed then
-			BreitbandGraphics.fill_ellipse(rect, highlightedColour)
+			bg_color = active_color
+			BreitbandGraphics.fill_ellipse(rect, active_color)
 		end
-		BreitbandGraphics.draw_ellipse(rect, TEXT_COLOUR, 1)
+		BreitbandGraphics.draw_ellipse(rect, Drawing.TEXT_COLOR, 1)
 	elseif shape == "rect" then
 		if pressed then
-			BreitbandGraphics.fill_rectangle(rect, highlightedColour)
-			text_color = "#000000"
+			bg_color = active_color
+			BreitbandGraphics.fill_rectangle(rect, active_color)
 		end
-		BreitbandGraphics.draw_rectangle(rect, TEXT_COLOUR, 1)
+		BreitbandGraphics.draw_rectangle(rect, Drawing.TEXT_COLOR, 1)
 	end
 
 	if textoffset_x == nil then textoffset_x = 6 end
@@ -157,7 +169,7 @@ local function draw_button(pressed, highlightedColour, text, shape, origin_x, or
 		rectangle = rect,
 		font_name = font,
 		font_size = Drawing.MEDIUM_FONT_SIZE,
-		color = text_color,
+		color = get_text_color_for_background(BreitbandGraphics.float_to_color(BreitbandGraphics.color_to_float(bg_color))),
 	})
 
 	return rect
@@ -285,7 +297,7 @@ function Drawing.drawMiscData(x, y_0)
 			rectangle = { x = x, y = y, width = width, height = 20 * Drawing.scale },
 			font_name = "Arial",
 			font_size = result.size + 4,
-			color = TEXT_COLOUR,
+			color = Drawing.TEXT_COLOR,
 			align_x = BreitbandGraphics.alignment.start,
 			-- fit = true
 		})
