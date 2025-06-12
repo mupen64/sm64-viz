@@ -13,6 +13,7 @@ Drawing = {
 	SMALL_FONT_SIZE = 0,
 	TEXT_COLOR = nil,
 	BACKGROUND_COLOUR = "#222222",
+	FONT = "Arial",
 	effective_width_offset = 0,
 	initial_size = { width = 0, height = 0 },
 	size = { width = 0, height = 0 },
@@ -118,7 +119,7 @@ function Drawing.draw_joystick(x, y)
 	BreitbandGraphics.draw_text2({
 		text = "x: " .. Joypad.input.X,
 		rectangle = { x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD, y = y + Drawing.JOY_RADIUS - 25 * Drawing.scale, width = 100 * Drawing.scale, height = 20 * Drawing.scale },
-		font_name = "Arial",
+		font_name = Drawing.FONT,
 		font_size = Drawing.MEDIUM_FONT_SIZE,
 		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
@@ -126,7 +127,7 @@ function Drawing.draw_joystick(x, y)
 	BreitbandGraphics.draw_text2({
 		text = "y: " .. -Joypad.input.Y,
 		rectangle = { x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD, y = y + Drawing.JOY_RADIUS, width = 100 * Drawing.scale, height = 20 * Drawing.scale },
-		font_name = "Arial",
+		font_name = Drawing.FONT,
 		font_size = Drawing.MEDIUM_FONT_SIZE,
 		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
@@ -185,12 +186,12 @@ function Drawing.draw_buttons(x, y)
 		end
 	end
 
-	track_max(draw_button(Joypad.input.A, "#3366CC", "A", "ellipse", x, y, 82, 60, 29, 29, nil, nil, "Arial"))
-	track_max(draw_button(Joypad.input.B, "#009245", "B", "ellipse", x, y, 63, 31, 29, 29, nil, nil, "Arial"))
-	track_max(draw_button(Joypad.input.start, "#EE1C24", "S", "ellipse", x, y, 31, 60, 29, 29, nil, nil, "Arial"))
-	track_max(draw_button(Joypad.input.R, "#DDDDDD", "R", "rect", x, y, 98, 0, 72, 21, nil, nil, "Arial"))
-	track_max(draw_button(Joypad.input.L, "#DDDDDD", "L", "rect", x, y, 9, 0, 72, 21, nil, nil, "Arial"))
-	track_max(draw_button(Joypad.input.Z, "#DDDDDD", "Z", "rect", x, y, 0, 30, 21, 59, nil, nil, "Arial"))
+	track_max(draw_button(Joypad.input.A, "#3366CC", "A", "ellipse", x, y, 82, 60, 29, 29, nil, nil, Drawing.FONT))
+	track_max(draw_button(Joypad.input.B, "#009245", "B", "ellipse", x, y, 63, 31, 29, 29, nil, nil, Drawing.FONT))
+	track_max(draw_button(Joypad.input.start, "#EE1C24", "S", "ellipse", x, y, 31, 60, 29, 29, nil, nil, Drawing.FONT))
+	track_max(draw_button(Joypad.input.R, "#DDDDDD", "R", "rect", x, y, 98, 0, 72, 21, nil, nil, Drawing.FONT))
+	track_max(draw_button(Joypad.input.L, "#DDDDDD", "L", "rect", x, y, 9, 0, 72, 21, nil, nil, Drawing.FONT))
+	track_max(draw_button(Joypad.input.Z, "#DDDDDD", "Z", "rect", x, y, 0, 30, 21, 59, nil, nil, Drawing.FONT))
 	track_max(draw_button(Joypad.input.Cleft, "#FFFF00", "3", "ellipse", x, y, 116, 47, 21, 21, 8, 7, "Marlett"))
 	track_max(draw_button(Joypad.input.Cright, "#FFFF00", "4", "ellipse", x, y, 155, 47, 21, 21, 9, 7, "Marlett"))
 	track_max(draw_button(Joypad.input.Cup, "#FFFF00", "5", "ellipse", x, y, 135, 28, 21, 21, 8, 8, "Marlett"))
@@ -294,7 +295,7 @@ function Drawing.drawMiscData(x, y_0)
 		BreitbandGraphics.draw_text2({
 			text = result.text,
 			rectangle = { x = x, y = y, width = width, height = 20 * Drawing.scale },
-			font_name = "Arial",
+			font_name = Drawing.FONT,
 			font_size = result.size + 4,
 			color = Drawing.TEXT_COLOR,
 			align_x = BreitbandGraphics.alignment.start,
