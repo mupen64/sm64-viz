@@ -48,9 +48,9 @@ emu.atdrawd2d(function()
 end)
 
 emu.atstop(function ()
-	Drawing.unresize()
+	Drawing.size_down()
 end)
 
 update_memory()
 Memory.UpdatePrevPos()
-Drawing.resizeScreen()
+Drawing.size_up()
