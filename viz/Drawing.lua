@@ -52,7 +52,6 @@ function Drawing.size_up()
 	Drawing.scale = (Drawing.initial_size.height - 23) / 600
 	Drawing.scale = MoreMaths.Round(Drawing.scale, 2)
 
-	print(Drawing.scale)
 	update_scaled_variables()
 
 	wgui.resize(Drawing.size.width, Drawing.size.height)
