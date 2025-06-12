@@ -4,8 +4,6 @@
 -- SPDX-License-Identifier: GPL-2.0-or-later
 --
 
-local BACKGROUND_COLOUR = "#222222"
-
 Drawing = {
 	TOP_BOTTOM_MARGIN = 20,
 	PAD = 10,
@@ -14,6 +12,7 @@ Drawing = {
 	MEDIUM_FONT_SIZE = 0,
 	SMALL_FONT_SIZE = 0,
 	TEXT_COLOR = nil,
+	BACKGROUND_COLOUR = "#222222",
 	effective_width_offset = 0,
 	initial_size = { width = 0, height = 0 },
 	size = { width = 0, height = 0 },
@@ -62,7 +61,7 @@ function Drawing.size_up()
 	update_scaled_variables()
 
 	Drawing.TEXT_COLOR = get_text_color_for_background(BreitbandGraphics.float_to_color(BreitbandGraphics
-		.color_to_float(BACKGROUND_COLOUR)))
+		.color_to_float(Drawing.BACKGROUND_COLOUR)))
 
 	wgui.resize(Drawing.size.width, Drawing.size.height)
 end
@@ -80,7 +79,7 @@ function Drawing.paint()
 
 	BreitbandGraphics.fill_rectangle(
 		{ x = Drawing.initial_size.width, y = 0, width = Drawing.effective_width_offset, height = Drawing.size.height },
-		BACKGROUND_COLOUR)
+		Drawing.BACKGROUND_COLOUR)
 
 	local base_x = Drawing.initial_size.width + 10
 	local current_y = Drawing.TOP_BOTTOM_MARGIN
@@ -145,7 +144,7 @@ local function draw_button(pressed, active_color, text, shape, origin_x, origin_
 		height = h * Drawing.scale
 	}
 
-	local bg_color = BACKGROUND_COLOUR
+	local bg_color = Drawing.BACKGROUND_COLOUR
 
 	if shape == "ellipse" then
 		if pressed then
