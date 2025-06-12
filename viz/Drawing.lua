@@ -342,7 +342,7 @@ function Drawing.drawMiscData(x, y_0)
 
 		BreitbandGraphics.draw_text2({
 			text = text,
-			rectangle = { x = text_rect.x, y = text_rect.y - 1, width = text_rect.width + 1, height = text_rect.height },
+			rectangle = { x = text_rect.x, y = text_rect.y, width = text_rect.width + 1, height = text_rect.height },
 			font_name = Drawing.FONT,
 			font_size = result.size,
 			color = Drawing.TEXT_COLOR,
