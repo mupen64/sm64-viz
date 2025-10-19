@@ -116,21 +116,24 @@ function Drawing.draw_joystick(x, y)
 	BreitbandGraphics.fill_ellipse(
 		{ x = joy_x - tip_size / 2, y = joy_y - tip_size / 2, width = tip_size, height = tip_size }, "#FF0000")
 
+	local text_x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD
 	BreitbandGraphics.draw_text2({
 		text = "x: " .. Joypad.input.X,
-		rectangle = { x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD, y = y + Drawing.JOY_RADIUS - 25 * Drawing.scale, width = 100 * Drawing.scale, height = 20 * Drawing.scale },
+		rectangle = { x = text_x, y = y + Drawing.JOY_RADIUS - 25 * Drawing.scale, width = Drawing.size.width - text_x, height = 20 * Drawing.scale },
 		font_name = Drawing.FONT,
 		font_size = Drawing.MEDIUM_FONT_SIZE,
 		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
+		fit = true,
 	})
 	BreitbandGraphics.draw_text2({
 		text = "y: " .. -Joypad.input.Y,
-		rectangle = { x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD, y = y + Drawing.JOY_RADIUS, width = 100 * Drawing.scale, height = 20 * Drawing.scale },
+		rectangle = { x = text_x, y = y + Drawing.JOY_RADIUS, width = Drawing.size.width - text_x, height = 20 * Drawing.scale },
 		font_name = Drawing.FONT,
 		font_size = Drawing.MEDIUM_FONT_SIZE,
 		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
+		fit = true,
 	})
 
 	return rect
