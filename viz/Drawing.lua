@@ -118,19 +118,19 @@ function Drawing.draw_joystick(x, y)
 
 	local text_x = x + Drawing.JOY_RADIUS * 2 + Drawing.PAD
 	BreitbandGraphics.draw_text2({
-		text = "x: " .. Joypad.input.X,
+		text = "X " .. Joypad.input.X,
 		rectangle = { x = text_x, y = y + Drawing.JOY_RADIUS - 25 * Drawing.scale, width = Drawing.size.width - text_x, height = 20 * Drawing.scale },
 		font_name = Drawing.FONT,
-		font_size = Drawing.MEDIUM_FONT_SIZE,
+		font_size = Drawing.SMALL_FONT_SIZE,
 		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
 		fit = true,
 	})
 	BreitbandGraphics.draw_text2({
-		text = "y: " .. -Joypad.input.Y,
+		text = "Y " .. -Joypad.input.Y,
 		rectangle = { x = text_x, y = y + Drawing.JOY_RADIUS, width = Drawing.size.width - text_x, height = 20 * Drawing.scale },
 		font_name = Drawing.FONT,
-		font_size = Drawing.MEDIUM_FONT_SIZE,
+		font_size = Drawing.SMALL_FONT_SIZE,
 		color = Drawing.TEXT_COLOR,
 		align_x = BreitbandGraphics.alignment.start,
 		fit = true,
