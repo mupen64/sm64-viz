@@ -1,3 +1,6 @@
+> [!NOTE]
+> This project has been merged into [SM64LuaRedux](https://github.com/mupen64/SM64LuaRedux).
+
 <p align="center">
   <img width="128" align="center" src="https://github.com/user-attachments/assets/74d29143-1c2e-4902-b184-8797f8768b03">
 </p>
